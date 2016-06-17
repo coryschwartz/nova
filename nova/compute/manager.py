@@ -96,7 +96,7 @@ from nova.virt import event as virtevent
 from nova.virt import storage_users
 from nova.virt import virtapi
 from nova import volume
-from nova.volume import encryptors
+from nova.volume.cbslayers import encryptors
 
 CONF = nova.conf.CONF
 

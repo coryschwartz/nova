@@ -13,36 +13,39 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+# Modified by Cory Schwartz June 2016
 
 from oslo_log import log as logging
 from oslo_utils import importutils
 from oslo_utils import strutils
 
 from nova.i18n import _LE, _LW
-from nova.volume.encryptors import nop
+from nova.volume.cbslayers.encryptors import nop
 
 
 LOG = logging.getLogger(__name__)
 
 
-def get_volume_encryptor(connection_info, **kwargs):
-    """Creates a VolumeEncryptor used to encrypt the specified volume.
+def get_volume_layer(connection_info, **kwargs):
+    """Creates a VolumeLayer for specified volume
 
     :param: the connection information used to attach the volume
-    :returns VolumeEncryptor: the VolumeEncryptor for the volume
+    :returns VolumeLayer: the VolumeLayer
     """
-    encryptor = nop.NoOpEncryptor(connection_info, **kwargs)
+    layer = nop.NoOpEncryptor(connection_info, **kwargs)
 
     location = kwargs.get('control_location', None)
     if location and location.lower() == 'front-end':  # case insensitive
         provider = kwargs.get('provider')
 
         if provider == 'LuksEncryptor':
-            provider = 'nova.volume.encryptors.luks.' + provider
+            provider = 'nova.volume.cbslayers.encryptors.luks.' + provider
         elif provider == 'CryptsetupEncryptor':
-            provider = 'nova.volume.encryptors.cryptsetup.' + provider
+            provider = 'nova.volume.cbslayers.encryptors.cryptsetup.' + provider
         elif provider == 'NoOpEncryptor':
-            provider = 'nova.volume.encryptors.nop.' + provider
+            provider = 'nova.volume.cbslayers.encryptors.nop.' + provider
+        elif provider == 'Raid5':
+            provider == 'nova.volume.cbslayers.multidisk.mdadm.' + provider
         try:
             encryptor = importutils.import_object(provider, connection_info,
                                                   **kwargs)
@@ -51,12 +54,12 @@ def get_volume_encryptor(connection_info, **kwargs):
                       {'provider': provider, 'exception': e})
             raise
 
-    msg = ("Using volume encryptor '%(encryptor)s' for connection: "
+    msg = ("Using layerd volume '%(layer)s' for connection: "
            "%(connection_info)s" %
-           {'encryptor': encryptor, 'connection_info': connection_info})
+           {'encryptor': layer, 'connection_info': connection_info})
     LOG.debug(strutils.mask_password(msg))
 
-    return encryptor
+    return layer 
 
 
 def get_encryption_metadata(context, volume_api, volume_id, connection_info):

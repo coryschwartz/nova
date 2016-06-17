@@ -15,14 +15,13 @@
 
 
 import abc
-
 import six
-
 from nova import keymgr
+from nova.volume.cbslayers.base import LayeredVolume
 
 
 @six.add_metaclass(abc.ABCMeta)
-class VolumeEncryptor(object):
+class VolumeEncryptor(LayeredVolume):
     """Base class to support encrypted volumes.
 
     A VolumeEncryptor provides hooks for attaching and detaching volumes, which
@@ -43,14 +42,3 @@ class VolumeEncryptor(object):
         """
         return self._key_manager.get(context, self.encryption_key_id)
 
-    @abc.abstractmethod
-    def attach_volume(self, context, **kwargs):
-        """Hook called immediately prior to attaching a volume to an instance.
-        """
-        pass
-
-    @abc.abstractmethod
-    def detach_volume(self, **kwargs):
-        """Hook called immediately after detaching a volume from an instance.
-        """
-        pass

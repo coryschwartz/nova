@@ -27,7 +27,7 @@ from nova import exception
 from nova.i18n import _LE
 from nova.i18n import _LI
 from nova.i18n import _LW
-from nova.volume import encryptors
+from nova.volume.cbslayers import encryptors
 
 CONF = nova.conf.CONF
 

@@ -20,7 +20,7 @@ from oslo_log import log as logging
 from nova.i18n import _LI
 from nova.i18n import _LW
 from nova import utils
-from nova.volume.encryptors import cryptsetup
+from nova.volume.cbslayers.encryptors import cryptsetup
 
 
 LOG = logging.getLogger(__name__)

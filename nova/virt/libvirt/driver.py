@@ -112,7 +112,7 @@ from nova.virt.libvirt.volume import remotefs
 from nova.virt import netutils
 from nova.virt import watchdog_actions
 from nova import volume
-from nova.volume import encryptors
+from nova.volume.cbslayers import encryptors
 
 libvirt = None
 

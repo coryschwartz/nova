@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from nova.volume.encryptors import base
+from nova.volume.cbslayers.encryptors import base
 
 
 class NoOpEncryptor(base.VolumeEncryptor):

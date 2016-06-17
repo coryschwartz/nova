@@ -21,7 +21,7 @@ from oslo_log import log as logging
 
 from nova import exception
 from nova import utils
-from nova.volume.encryptors import base
+from nova.volume.cbslayers.encryptors import base
 
 
 LOG = logging.getLogger(__name__)
